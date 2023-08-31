@@ -37,7 +37,7 @@ export const SignUpForm = () => {
 
       const response = await axios.post('/api/auth/signup', values)
 
-      if (response.data.status === 400) throw new Error(response.data.error)
+      if (response.data.status !== 200) throw new Error(response.data.error)
 
       toast.success('Sign up success!')
       router.push('/signin')

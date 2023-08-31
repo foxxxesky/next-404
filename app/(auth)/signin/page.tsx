@@ -1,23 +1,10 @@
-'use client'
-
 import React from 'react'
 import Link from 'next/link'
-// import { axios } from 'axios'
-import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/button'
 import { SignInForm } from '@/components/molecules/SignInForm'
 
 export default function SignInPage() {
-  const [ user, setUser ] = React.useState({
-      username: '',
-      email: '',
-      password: ''
-  })
-
-  const onSignUp = async () => {
-  }
-
   return (
     <div className="flex flex-col justify-center gap-8 md:w-1/3 md:px-10 px-4 py-12">
       <div className="flex flex-col justify-center items-center gap-2">

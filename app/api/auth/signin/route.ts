@@ -2,11 +2,7 @@ import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { NextRequest, NextResponse } from 'next/server'
 
-import { connect } from '@/db/connection'
-import User from '@/db/models/userModel'
-
-// connect to database
-connect()
+import prisma from '@/db'
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,7 +10,11 @@ export async function POST(req: NextRequest) {
     const { email, password } = reqBody
 
     // check if user already registered
-    const user = await User.findOne({ email: email })
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    })
 
     if (!user) {
       return NextResponse.json({
@@ -35,18 +35,19 @@ export async function POST(req: NextRequest) {
 
     // create token
     const tokenData = {
-      id: user._id,
+      id: user.id,
       email: user.email,
       username: user.username
     }
 
-    const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: '1h' })
+    const token = jwt.sign(tokenData, process.env.JWT_SECRET!, { expiresIn: '1h' })
+    console.log(token)
 
     const response = NextResponse.json({
       status: 200,
       message: 'User logged in successfully',
     })
-    
+
     response.cookies.set('token', token, { httpOnly: true })
 
     return response

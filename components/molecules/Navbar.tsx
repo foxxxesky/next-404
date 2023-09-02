@@ -44,7 +44,7 @@ export const Sidebar = () => {
       <div className='flex items-center gap-x-3'>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button size='sm' variant='ghost' className='w-full'>Profile</Button>
+            <Button size='sm' variant='ghost' className='w-full'>Menu</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuLabel className='text-xs'>My Account</DropdownMenuLabel>

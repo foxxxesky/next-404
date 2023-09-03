@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
 import { ToastProvider } from '@/providers/toast.provider'
+import { Provider } from '@/providers/session.provider'
 
 const poppins = Poppins({
   subsets: ['latin-ext'],
@@ -21,10 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
-        <ToastProvider />
-        {children}
-      </body>
+      <Provider>
+        <body className={poppins.className}>
+          <ToastProvider />
+          {children}
+        </body>
+      </Provider>
     </html>
   )
 }

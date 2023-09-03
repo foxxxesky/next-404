@@ -4,13 +4,15 @@ import * as z from 'zod'
 import axios from 'axios'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { toast } from 'react-hot-toast'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { signIn } from 'next-auth/react'
+import { Github } from 'lucide-react'
 
 const signInSchema = z.object({
   email: z.string().email({message: 'Please enter a valid email.'}),
@@ -29,13 +31,37 @@ export const SignInForm = () => {
     }
   })
 
-  const onSubmit = async (values: z.infer<typeof signInSchema>) => {
+  // const onSubmit = async (values: z.infer<typeof signInSchema>) => {
+  //   try {
+  //     setLoading(true)
+
+  //     const response = await axios.post('/api/auth/signin', values)
+
+  //     if (response.data.status !== 200) throw new Error(response.data.error)
+
+  //     toast.success('Sign in success!')
+  //     router.push('/')
+
+  //   } catch (error: any) {
+  //     toast.error(error.message)
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  const useCredentials = async (values: z.infer<typeof signInSchema>) => {
     try {
       setLoading(true)
 
-      const response = await axios.post('/api/auth/signin', values)
+      const res = await signIn('credentials', {
+        redirect: false,
+        email: values.email,
+        password: values.password
+      })
 
-      if (response.data.status !== 200) throw new Error(response.data.error)
+      if (res?.error) {
+        throw new Error('Invalid credentials')
+      }
 
       toast.success('Sign in success!')
       router.push('/')
@@ -50,7 +76,7 @@ export const SignInForm = () => {
   return (
     <div className="flex justify-center items-center">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <form onSubmit={form.handleSubmit(useCredentials)} className='space-y-4'>
           <FormField
             control={form.control}
             name='email'
@@ -91,12 +117,22 @@ export const SignInForm = () => {
               )
             }}
           />
-          <div className="pt-6">
+          <div className="pt-6 space-y-2">
             <Button
               type='submit'
               className='w-full'
             >
               Sign In
+            </Button>
+
+            <p className='text-slate-400 text-xs text-center py-5'>or sign in with</p>
+
+            <Button
+              onClick={() => signIn('github')}
+              variant='outline'
+              className='w-full'
+            >
+              <Github className="mr-2 h-4 w-4" /> Github
             </Button>
           </div>
         </form>

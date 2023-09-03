@@ -12,7 +12,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
   providers: [
     GithubProvider({
-      name: 'GitHub',
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
@@ -52,6 +51,9 @@ export const authOptions: NextAuthOptions = {
       }
     })
   ],
+  // jwt: {
+
+  // }
   pages: {
     signIn: '/signin'
   }

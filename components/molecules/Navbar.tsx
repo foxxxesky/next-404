@@ -4,6 +4,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
@@ -19,7 +20,7 @@ export const Sidebar = () => {
     try {
       setLoading(true)
 
-      await axios.get('/api/auth/logout')
+      await signOut({ redirect: false, callbackUrl: '/' })
 
       toast.success('Logout success!')
       router.push('/signin')

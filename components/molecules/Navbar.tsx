@@ -1,10 +1,9 @@
 'use client'
 
-import axios from 'axios'
 import Link from 'next/link'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 import { toast } from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
@@ -24,6 +23,7 @@ export const Sidebar = () => {
 
       toast.success('Logout success!')
       router.push('/signin')
+      
     } catch (error: any) {
       toast.error(error.message)
     } finally {

@@ -1,40 +1,30 @@
-'use client'
+import { getServerSession } from 'next-auth'
 
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import prisma from '@/db'
+import PageHeading from '@/components/atomic/PageHeading'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+import { ProfileForm } from '@/components/molecules/ProfileForm'
 
-import { toast } from 'react-hot-toast'
-
-
-export default function Profile() {
-  const router = useRouter()
-  const [data, setData] = useState({})
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await axios.get('/api/auth/profile')
-        console.log(user.data.data)
-
-        setData(user.data.data)
-
-      } catch (error: any) {
-        toast.error(error.message)
-      }
+const ProfilePage = async() => {
+  const session = await getServerSession(authOptions)
+  const userData = await prisma.user.findUnique({
+    where: {
+      email: session?.user?.email!
     }
-
-    getUser()
-
-  }, [])
+  })
 
   return (
-   <>
-      {/* { data ? (
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      ) : (
-        <p>Loading user data...</p>
-      )} */}
-   </>
+   <div className='p-4'>
+    <PageHeading
+      title='Profile'
+      desc='Your profile information'
+    />
+
+    <div className="pt-10">
+      <ProfileForm initialData={userData!} />
+    </div>
+   </div>
   )
 }
+
+export default ProfilePage

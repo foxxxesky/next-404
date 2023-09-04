@@ -1,18 +1,16 @@
 'use client'
 
 import * as z from 'zod'
-import axios from 'axios'
 import { useState } from 'react'
+import { Github } from 'lucide-react'
+import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
-import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { toast } from 'react-hot-toast'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { signIn } from 'next-auth/react'
-import { Github } from 'lucide-react'
 
 const signInSchema = z.object({
   email: z.string().email({message: 'Please enter a valid email.'}),
@@ -20,7 +18,6 @@ const signInSchema = z.object({
 })
 
 export const SignInForm = () => {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -30,24 +27,6 @@ export const SignInForm = () => {
       password: ''
     }
   })
-
-  // const onSubmit = async (values: z.infer<typeof signInSchema>) => {
-  //   try {
-  //     setLoading(true)
-
-  //     const response = await axios.post('/api/auth/signin', values)
-
-  //     if (response.data.status !== 200) throw new Error(response.data.error)
-
-  //     toast.success('Sign in success!')
-  //     router.push('/')
-
-  //   } catch (error: any) {
-  //     toast.error(error.message)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
 
   const useCredentials = async (values: z.infer<typeof signInSchema>) => {
     try {
@@ -64,7 +43,7 @@ export const SignInForm = () => {
       }
 
       toast.success('Sign in success!')
-      router.push('/')
+      window.location.assign('/')
 
     } catch (error: any) {
       toast.error(error.message)

@@ -5,7 +5,7 @@ const HomePage = () => {
     <div className="p-4">
       <PageHeading
         title='Home'
-    />
+      />
     </div>
   )
 }

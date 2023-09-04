@@ -23,7 +23,7 @@ export const Sidebar = () => {
 
       toast.success('Logout success!')
       router.push('/signin')
-      
+
     } catch (error: any) {
       toast.error(error.message)
     } finally {

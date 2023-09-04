@@ -7,11 +7,14 @@ import { ProfileForm } from '@/components/molecules/ProfileForm'
 
 const ProfilePage = async() => {
   const session = await getServerSession(options)
+  console.log(session?.user)
   const userData = await prisma.user.findUnique({
     where: {
       email: session?.user.email!
     }
   })
+
+  console.log(userData)
 
   return (
    <div className='p-4'>

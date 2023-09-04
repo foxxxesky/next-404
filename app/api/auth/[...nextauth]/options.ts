@@ -28,6 +28,8 @@ export const options: NextAuthOptions = {
           })
         }
 
+        console.log('user', user)
+
         if (!user) {
           createUser()
         }

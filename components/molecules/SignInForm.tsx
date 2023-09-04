@@ -3,6 +3,7 @@
 import * as z from 'zod'
 import { useState } from 'react'
 import { Github } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,6 +19,7 @@ const signInSchema = z.object({
 })
 
 export const SignInForm = () => {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -43,7 +45,7 @@ export const SignInForm = () => {
       }
 
       toast.success('Sign in success!')
-      window.location.assign('/')
+      router.push('/')
 
     } catch (error: any) {
       toast.error(error.message)

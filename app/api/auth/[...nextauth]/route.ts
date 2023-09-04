@@ -45,8 +45,6 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        console.log('user', user)
-
         return user
       }
     })

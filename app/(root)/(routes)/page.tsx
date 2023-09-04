@@ -1,10 +1,13 @@
-import ProfileForm from '@/components/molecules/ProfileForm'
+import PageHeading from '@/components/atomic/PageHeading'
 
-export default function Home() {
+const HomePage = () => {
   return (
-    <div>
-      <h1 className="font-bold text-2xl">Home</h1>
-      <ProfileForm />
+    <div className="p-4">
+      <PageHeading
+        title='Home'
+    />
     </div>
   )
 }
+
+export default HomePage

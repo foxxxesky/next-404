@@ -1,14 +1,49 @@
 import bcrypt from 'bcryptjs'
 import type { NextAuthOptions } from 'next-auth'
-import GithubProvider, { GithubProfile } from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import GithubProvider, { GithubProfile } from 'next-auth/providers/github'
 
 import prisma from '@/db'
 
 export const options: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      async profile(profile) {
+        // check if user exists
+        const user = await prisma.user.findUnique({
+          where: {
+            email: profile.email ?? '',
+          },
+        })
+
+        async function createUser() {
+          await prisma.user.create({
+            data: {
+              username: profile.name ?? '',
+              email: profile.email ?? '',
+              role: 'User',
+              password: await bcrypt.hash(profile.sub, 10),
+            },
+          })
+        }
+
+        if (!user) {
+          createUser()
+        }
+
+        return {
+          ...profile,
+          id: profile.sub,
+          role: profile.role ?? 'User',
+          username: profile.name
+        }
+      },
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     GithubProvider({
-      async profile(profile: GithubProfile) {
+      async profile(profile) {
 
         // check if user exists
         const user = await prisma.user.findUnique({
@@ -27,8 +62,6 @@ export const options: NextAuthOptions = {
             },
           })
         }
-
-        console.log('user', user)
 
         if (!user) {
           createUser()

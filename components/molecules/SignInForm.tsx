@@ -2,7 +2,7 @@
 
 import * as z from 'zod'
 import { useState } from 'react'
-import { Github } from 'lucide-react'
+import { Github, ChromeIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
@@ -114,6 +114,13 @@ export const SignInForm = () => {
               className='w-full'
             >
               <Github className="mr-2 h-4 w-4" /> Github
+            </Button>
+            <Button
+              onClick={() => signIn('google')}
+              variant='outline'
+              className='w-full'
+            >
+              <ChromeIcon className="mr-2 h-4 w-4" /> Google
             </Button>
           </div>
         </form>

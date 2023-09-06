@@ -1,29 +1,32 @@
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-export { default } from 'next-auth/middleware'
+import { withAuth, NextRequestWithAuth } from 'next-auth/middleware'
 
-// This function can be marked `async` if using `await` inside
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname
-  const isPublicPath = path === '/signin' || path === '/signup'
+export default withAuth(
+  function middleware(request: NextRequestWithAuth) {
+    const isAdminPath = request.nextUrl.pathname.startsWith('/admin')
+    const token = request.nextauth.token
 
-  const token = request.cookies.get('next-auth.session-token')?.value || ''
-
-  if (isPublicPath && token) {
-    return NextResponse.redirect(new URL('/', request.nextUrl))
+    if (isAdminPath && token?.role !== 'Admin') {
+      return NextResponse.redirect(new URL('/', request.nextUrl))
+    }
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        return !!token
+      },
+    },
+    pages: {
+      signIn: '/signin',
+    }
   }
-
-  if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/signin', request.nextUrl))
-  }
-}
+)
 
 // See "Matching Paths" below to learn more
 export const config = {
   matcher: [
     '/',
     '/profile',
-    '/signin',
-    '/signup',
+    '/admin'
   ]
 }

@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import type { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GithubProvider, { GithubProfile } from 'next-auth/providers/github'
+import GithubProvider from 'next-auth/providers/github'
 
 import prisma from '@/db'
 
@@ -13,16 +13,15 @@ export const options: NextAuthOptions = {
         // check if user exists
         const user = await prisma.user.findUnique({
           where: {
-            email: profile.email ?? '',
+            email: profile.email,
           },
         })
 
         async function createUser() {
           await prisma.user.create({
             data: {
-              username: profile.name ?? '',
-              email: profile.email ?? '',
-              role: 'User',
+              email: profile.email,
+              username: profile.given_name,
               password: await bcrypt.hash(profile.sub, 10),
             },
           })
@@ -33,10 +32,11 @@ export const options: NextAuthOptions = {
         }
 
         return {
-          ...profile,
-          id: profile.sub,
-          role: profile.role ?? 'User',
-          username: profile.name
+          id: user?.id,
+          role: user?.role,
+          email: user?.email,
+          username: user?.username,
+          ...profile
         }
       },
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -44,20 +44,18 @@ export const options: NextAuthOptions = {
     }),
     GithubProvider({
       async profile(profile) {
-
         // check if user exists
         const user = await prisma.user.findUnique({
           where: {
-            email: profile.email ?? '',
+            email: profile.email,
           },
         })
 
         async function createUser() {
           await prisma.user.create({
             data: {
+              email: profile.email,
               username: profile.login,
-              email: profile.email ?? '',
-              role: 'User',
               password: await bcrypt.hash(profile.node_id, 10),
             },
           })
@@ -68,9 +66,11 @@ export const options: NextAuthOptions = {
         }
 
         return {
-          ...profile,
-          role: profile.role ?? 'User',
-          username: profile.login
+          id: user?.id,
+          role: user?.role,
+          email: user?.email,
+          username: user?.username,
+          ...profile
         }
       },
       clientId: process.env.GITHUB_CLIENT_ID!,
@@ -114,8 +114,10 @@ export const options: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.username = user.username
         token.role = user.role
+        token.email = user.email
+        token.name = user.username
+        token.username = user.username
       }
 
       return token
@@ -124,16 +126,16 @@ export const options: NextAuthOptions = {
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.id
-        session.user.username = token.username
         session.user.role = token.role
+        session.user.email = token.email
+        session.user.username = token.username
       }
-
-      // console.log('session', session)
 
       return session
     }
   },
   pages: {
     signIn: '/signin',
+    signOut: '/signin'
   }
 }

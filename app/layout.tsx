@@ -4,6 +4,7 @@ import { Poppins } from 'next/font/google'
 
 import { ToastProvider } from '@/providers/toast.provider'
 import { Provider } from '@/providers/session.provider'
+import { getServerSession } from 'next-auth'
 
 const poppins = Poppins({
   subsets: ['latin-ext'],
@@ -15,14 +16,16 @@ export const metadata: Metadata = {
   description: 'Website to learn Next 13',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession()
+
   return (
     <html lang="en">
-      <Provider>
+      <Provider userSession={session}>
         <body className={poppins.className}>
           <ToastProvider />
           {children}

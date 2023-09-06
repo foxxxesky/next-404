@@ -1,10 +1,19 @@
 import React from 'react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 
 import { Button } from '@/components/ui/button'
 import { SignInForm } from '@/components/molecules/SignInForm'
+import { options } from '@/app/api/auth/[...nextauth]/options'
 
-const SignInPage = () => {
+const SignInPage = async () => {
+  const session = await getServerSession(options)
+
+  if (session) {
+    return redirect('/')
+  }
+
   return (
     <div className="flex flex-col justify-center gap-8 md:w-1/3 md:px-10 px-4 py-12">
       <div className="flex flex-col justify-center items-center gap-2">

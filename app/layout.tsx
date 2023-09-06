@@ -2,6 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 
+import { options } from '@/app/api/auth/[...nextauth]/options'
 import { ToastProvider } from '@/providers/toast.provider'
 import { Provider } from '@/providers/session.provider'
 import { getServerSession } from 'next-auth'
@@ -21,7 +22,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession()
+  const session = await getServerSession(options)
 
   return (
     <html lang="en">

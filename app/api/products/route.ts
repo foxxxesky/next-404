@@ -1,12 +1,8 @@
 import prisma from '@/db'
-import { getServerSession } from 'next-auth/next';
-import { NextRequest, NextResponse } from 'next/server';
-import { options } from '@/app/api/auth/[...nextauth]/options';
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(options)
-
     const reqBody = await req.json()
 
     const product = await prisma.product.create({

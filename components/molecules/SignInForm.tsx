@@ -55,7 +55,7 @@ export const SignInForm = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex flex-col justify-center items-center">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(useCredentials)} className='space-y-4'>
           <FormField
@@ -107,24 +107,25 @@ export const SignInForm = () => {
             </Button>
 
             <p className='text-slate-400 text-xs text-center py-5'>or sign in with</p>
-
-            <Button
-              onClick={() => signIn('github')}
-              variant='outline'
-              className='w-full'
-            >
-              <Github className="mr-2 h-4 w-4" /> Github
-            </Button>
-            <Button
-              onClick={() => signIn('google')}
-              variant='outline'
-              className='w-full'
-            >
-              <ChromeIcon className="mr-2 h-4 w-4" /> Google
-            </Button>
           </div>
         </form>
       </Form>
+      <div className="space-y-2">
+        <Button
+          onClick={() => signIn('github')}
+          variant='outline'
+          className='w-full'
+        >
+          <Github className="mr-2 h-4 w-4" /> Github
+        </Button>
+        <Button
+          onClick={() => signIn('google')}
+          variant='outline'
+          className='w-full'
+        >
+          <ChromeIcon className="mr-2 h-4 w-4" /> Google
+        </Button>
+      </div>
     </div>
   )
 }

@@ -11,7 +11,9 @@ const RootLayout = ({ children } : {
         <Sidebar />
       </div>
       <div className='md:pl-52 pt-16 h-full'>
-        { children }
+        <div className='p-4'>
+          { children }
+        </div>
       </div>
     </main>
   )

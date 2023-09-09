@@ -5,8 +5,7 @@ const ProductData = async () => {
 
   return (
     <div className='mt-10'>
-      <h1>Product Data</h1>
-      <pre>{ JSON.stringify(products.data.products, null, 2) }</pre>
+      {/* <pre>{ JSON.stringify(products.data.products, null, 2) }</pre> */}
     </div>
   )
 }

@@ -14,8 +14,6 @@ const ProfilePage = async() => {
     }
   })
 
-  console.log(userData)
-
   return (
    <div className='p-4'>
     <PageHeading
